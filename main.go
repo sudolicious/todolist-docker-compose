@@ -81,7 +81,7 @@ func runMigrations(db *sql.DB, migrationsPath string) error {
 func main() {
 
 	//Connection to PostgreSql
-	connStr := "user=olgadb dbname=dbgo password='Cvetaria2015' sslmode=disable"
+	connStr := "user=olgadb dbname=dbgo password='****' sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
