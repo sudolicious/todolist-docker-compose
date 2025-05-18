@@ -1,0 +1,57 @@
+services:
+  postgres:
+    platform: linux/amd64
+    image: bitnami/postgresql:15
+    environment:
+      POSTGRESQL_DATABASE: dbgo
+      POSTGRESQL_USERNAME: olgadb
+      POSTGRESQL_PASSWORD: "1234"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    ports:
+      - "5432:5432"
+    networks:
+      - todo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U olgadb -d dbgo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    platform: linux/amd64
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - todo-network
+    restart: unless-stopped
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_BASE_URL=http://backend:8080
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - todo-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  todo-network:
+    driver: bridge

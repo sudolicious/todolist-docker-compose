@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -21,6 +23,13 @@ type Task struct {
 	Title     string     `json:"title"`
 	Done      bool       `json:"done"`
 	CreatedAt *time.Time `json:"created_at"`
+}
+
+func getEnv(key, fallback string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return fallback
 }
 
 func addTask(db *sql.DB, title string) (*Task, error) {
@@ -82,20 +91,43 @@ func runMigrations(db *sql.DB) error {
 
 func main() {
 
-	//Connection to PostgreSql
-	connStr := "user=olgadb dbname=dbgo password='****' sslmode=disable"
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// Read database configuration from environment variables
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbSSLMode := os.Getenv("DB_SSL_MODE")
+
+	// Connection string
+	connStr := fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
+		dbUser,
+		dbPassword,
+		dbName,
+		dbHost,
+		dbPort,
+		dbSSLMode,
+	)
+
+	//Connection to Postgre
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error of connection to Data Base", err)
 	}
 	defer db.Close()
 
 	//Check the connection
 	err = db.Ping()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error of connection to Data Base", err)
 	}
-
 	fmt.Println("Successfully connected to PostgreSql!")
 
 	//Migration func
@@ -191,7 +223,7 @@ func main() {
 
 	//Set CORS
 	c := cors.New(cors.Options{
-    		AllowedOrigins:   []string{"http://localhost:3000", "http://127.0.0.1:3000"},
+    		AllowedOrigins:   []string{"http://localhost:3000","http://frontend:80", "http://127.0.0.1:3000"},
     		AllowOriginFunc: func(origin string) bool {
 
 		// Allow requests with no Origin (for curl)
@@ -199,7 +231,7 @@ func main() {
        			return true
         		}
 
-        	for _, allowedOrigin := range []string{"http://localhost:3000", "http://127.0.0.1:3000"} {
+        	for _, allowedOrigin := range []string{"http://localhost:3000","http://frontend:80", "http://127.0.0.1:3000"} {
 	        	if origin == allowedOrigin {
                		return true
             		}
@@ -215,10 +247,10 @@ func main() {
 
 	// Wrap the router with CORS middleware
     	handler := c.Handler(mux)
-
+/*
 	fs := http.FileServer(http.Dir("./frontend/build"))
 	mux.Handle("/", http.StripPrefix("/", fs))
-
+*/
 	// Start server
 	fmt.Println("Server running on http://localhost:8080")
     	log.Fatal(http.ListenAndServe(":8080", handler))
