@@ -94,7 +94,7 @@ func main() {
 	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Warning: No .env file found")
 	}
 
 	// Read database configuration from environment variables
