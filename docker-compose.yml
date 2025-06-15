@@ -3,9 +3,9 @@ services:
     platform: linux/amd64
     image: bitnami/postgresql:15
     environment:
-      POSTGRESQL_DATABASE: dbgo
-      POSTGRESQL_USERNAME: olgadb
-      POSTGRESQL_PASSWORD: "1234"
+      POSTGRESQL_DATABASE: ${POSTGRES_DB}
+      POSTGRESQL_USERNAME: ${POSTGRES_USER}
+      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/bitnami/postgresql
     ports:

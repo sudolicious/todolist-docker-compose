@@ -23,9 +23,10 @@ Git (для клонирования репозитория)
 
 1. Клонирование репозитория
 git clone https://github.com/sudolicious/todolist-docker-compose.git
-cd todolist-docker-compose
 
-2. Скопируйте файл .env.example и заполните
+2. Скопируйте файлы .env.example и заполните
+cd todolist-docker-compose
+cp .env.example .env # заполните переменные для БД
 cd backend 
 cp .env.example .env # заполните переменные для БД
 
