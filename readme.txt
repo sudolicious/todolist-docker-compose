@@ -1,56 +1,60 @@
-ToDoList - приложение для управления списком задач.
+Docker Compose + Todolist
 
-Функционал:
-- Добавление новых задач;
-- Просмотр списка всех задач;
-- Выделение задачи выполненной;
-- Удаление задачи
+ToDoList - A task management application.
 
-![ToDoList Preview](https://github.com/sudolicious/todolist/blob/main/frontend/public/Screenshot.png?raw=true)
+Features:
 
-Технологии:
-Frontend: React c Typescript
+- Add new tasks;
+- View the list of all tasks;
+- Mark tasks as completed;
+- Delete tasks.
+
+Preview:
+https://github.com/sudolicious/todolist/blob/main/frontend/public/Screenshot.png?raw=true
+
+Technologies:
+Frontend: React with TypeScript
 Backend: Golang
-База данных: PostgreSql
-Контейнеризация: Docker
+Database: PostgreSQL
+Containerization: Docker
 
-Требования:
-Docker (версия 20.10.0+)
-Docker Compose (версия 1.29.0+)
-Git (для клонирования репозитория)
+Requirements:
+Docker (version 20.10.0+)
+Docker Compose (version 1.29.0+)
+Git (for cloning the repository)
 
-Установка и запуск.
+Installation and setup:
 
-1. Клонирование репозитория
-git clone https://github.com/sudolicious/todolist-docker-compose.git
+    1. Clone the repository
+    git clone https://github.com/sudolicious/todolist-docker-compose.git
 
-2. Скопируйте файлы .env.example и заполните
-cd todolist-docker-compose
-cp .env.example .env # заполните переменные для БД
-cd backend 
-cp .env.example .env # заполните переменные для БД
+    2. Copy .env files and configure them
+    cd todolist-docker-compose
+    cp .env.example .env # fill in database variables
+    cd backend
+    cp .env.example .env # fill in backend environment variables
 
-3. Соберите и запустите приложение
-cd todolist-docker-compose
-docker-compose up --build -d
+    3. Build and run the application
+    cd todolist-docker-compose
+    docker-compose up --build -d
 
-4. Откройте приложение
-Фронтенд: http://localhost:3000
-Бэкенд API: http://localhost:3000/api/tasks
+    4. Open the application
+    Frontend: http://localhost:3000
+    Backend API: http://localhost:3000/api/tasks
 
-Структура проекта
+Project structure:
 todolist-docker-compose/
-├── ├── backend/          # Go-бэкенд
-│   ├── Dockerfile        # Dockerfile для бэкенда
-│   └── .env.example      # Пример файла с переменными окружения для бэкенда
-│   └── migrations/       # Миграции БД
+├── backend/ # Go backend
+│ ├── Dockerfile # Backend Dockerfile
+│ └── .env.example # Backend environment variables template
+│ └── migrations/ # Database migrations
 │
-├── frontend/             # React-приложение
-│   ├── src/              # Исходные файлы фронтенда
-│   ├── public/           # Статические файлы
-│   ├── Dockerfile        # Dockerfile для фронтенда
-│   └── package.json      # Зависимости React
+├── frontend/ # React frontend
+│ ├── src/ # Frontend source files
+│ ├── public/ # Static files
+│ ├── Dockerfile # Frontend Dockerfile
+│ └── package.json # React dependencies
 │
-├── openapi.yml           # OpenAPI спецификация
-├── docker-compose.yml    # Основной файл конфигурации Docker Compose
-└── README.md             # Этот файл
+├── openapi.yml # OpenAPI specification
+├── docker-compose.yml # Main Docker Compose configuration
+└── README.md # This file
